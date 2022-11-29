@@ -112,9 +112,11 @@ public class ProduitService implements IDAO<Produit> {
     }
 
     @Override
-    public long stockHP() {
+    public long stockHP(String marque) {
         Session session = sessionFactory.openSession();
-        long  stockHP = (long) session.createQuery("select sum(stock) from Produit where marque='HP'").uniqueResult();
+        Query query =  session.createQuery("select sum(stock) from Produit where marque=:marque");
+        query.setParameter("marque",marque);
+        long  stockHP = (long) query.uniqueResult();
 
         return stockHP;
     }
@@ -143,11 +145,11 @@ public class ProduitService implements IDAO<Produit> {
     }
 
     @Override
-    public int deleteMarque() {
+    public int deleteMarque(String marque) {
         Session session = sessionFactory.openSession();
         String delete_query =  "delete from Produit where marque=:marqueD";
         Query query = session.createQuery(delete_query);
-        query.setParameter("marqueD","Dell");
+        query.setParameter("marqueD",marque);
         session.getTransaction().begin();
         int success = query.executeUpdate();
         session.getTransaction().commit();

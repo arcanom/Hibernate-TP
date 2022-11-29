@@ -12,10 +12,7 @@ import org.hibernate.query.Query;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -88,23 +85,67 @@ public class Main {
 //            System.out.println(p.getReference());
 //        }
 
-        //1
-      long result = ps.stockHP();
-      System.out.println("Somme stock HP " +  result);
+//        //1
+//      long result = ps.stockHP();
+//      System.out.println("Somme stock HP " +  result);
+//
+//      //2
+//      double moyenne = ps.moyenneProduit();
+//        System.out.println("Moyenne " + moyenne);
+//
+//        //3
+//      List<Produit> produits = ps.filterMarqueTelephone();
+//      for (Produit p: produits){
+//          System.out.println(p);
+//      }
+//    //4
+//      int result1 = ps.deleteMarque();
+//        System.out.println(result1);
 
-      //2
-      double moyenne = ps.moyenneProduit();
-        System.out.println("Moyenne " + moyenne);
-
-        //3
-      List<Produit> produits = ps.filterMarqueTelephone();
-      for (Produit p: produits){
-          System.out.println(p);
-      }
-    //4
-      int result1 = ps.deleteMarque();
-        System.out.println(result1);
-
+        System.out.println("1- Stock des produits d'une marque");
+        System.out.println("2- Prix Moyen des produits");
+        System.out.println("3-  Liste des marques de téléphone");
+        System.out.println("4- Supprimer les produits d'une marque ");
+        System.out.println("0- Exit");
+        Scanner sc = new Scanner(System.in);
+        int choix = sc.nextInt();
+        while(choix != 0){
+            switch (choix){
+                case 1:
+                    System.out.println("Le nom de la marque");
+                    String marque = sc.next();
+                    Long stock = ps.stockHP(marque);
+                    System.out.println("Somme stock HP " +  stock);
+                    break;
+                case 2:
+                    double moyenne = ps.moyenneProduit();
+                    System.out.println("Moyenne " + moyenne);
+                    break;
+                case 3:
+                    List<Produit> produits = ps.filterMarqueTelephone();
+                     for (Produit p: produits){
+                         System.out.println(p);
+                         }
+                     break;
+                case 4:
+                    System.out.println("Le nom de la marque");
+                    String marque1 = sc.next();
+                    int result1 =  ps.deleteMarque(marque1);
+                    System.out.println(result1);
+                    break;
+                case 0:
+                    System.out.println("Au revoir");
+                    break;
+                default:
+                    System.out.println("Choix incorrect");
+            }
+            System.out.println("1- Stock des produits d'une marque");
+            System.out.println("2- Prix Moyen des produits");
+            System.out.println("3-  Liste des marques de téléphone");
+            System.out.println("4- Supprimer les produits d'une marque ");
+            System.out.println("0- Exit");
+            choix = sc.nextInt();
+        }
 
     }
     }

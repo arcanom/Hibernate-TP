@@ -18,11 +18,11 @@ public interface IDAO<T> {
 
     List<T>filterByDate() throws Exception;
 
-    long stockHP() ;
+    long stockHP(String marque) ;
 
     double moyenneProduit();
 
     List<T> filterMarqueTelephone() throws Exception;
 
-    int deleteMarque();
+    int deleteMarque(String marque);
 }
