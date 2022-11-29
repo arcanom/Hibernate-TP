@@ -68,10 +68,10 @@ public class Main {
 
 
         //1
-        List<Produit> produits = ps.filterByDate();
-        for (Produit p :  produits){
-            System.out.println(p);
-        }
+//        List<Produit> produits = ps.filterByDate();
+//        for (Produit p :  produits){
+//            System.out.println(p);
+//        }
 
         // 2
 //        List result= ps.filterByPrice();
@@ -87,6 +87,24 @@ public class Main {
 //            System.out.println(p.getId());
 //            System.out.println(p.getReference());
 //        }
+
+        //1
+      long result = ps.stockHP();
+      System.out.println("Somme stock HP " +  result);
+
+      //2
+      double moyenne = ps.moyenneProduit();
+        System.out.println("Moyenne " + moyenne);
+
+        //3
+      List<Produit> produits = ps.filterMarqueTelephone();
+      for (Produit p: produits){
+          System.out.println(p);
+      }
+    //4
+      int result1 = ps.deleteMarque();
+        System.out.println(result1);
+
 
     }
     }

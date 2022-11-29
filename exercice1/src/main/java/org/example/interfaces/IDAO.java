@@ -17,4 +17,12 @@ public interface IDAO<T> {
     List<T>filterByPrice() throws Exception;
 
     List<T>filterByDate() throws Exception;
+
+    long stockHP() ;
+
+    double moyenneProduit();
+
+    List<T> filterMarqueTelephone() throws Exception;
+
+    int deleteMarque();
 }

@@ -8,11 +8,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
-import org.hibernate.type.DateType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringType;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -78,7 +76,7 @@ public class ProduitService implements IDAO<Produit> {
     public List<Produit> filterByPrice() throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Valeur");
-        int min = sc.nextInt();
+        double min = sc.nextDouble();
         if(min>=0){
             Session session = sessionFactory.openSession();
             session.beginTransaction();
@@ -112,4 +110,51 @@ public class ProduitService implements IDAO<Produit> {
             return productsQuery2.list();
         } throw new Exception("error date");
     }
+
+    @Override
+    public long stockHP() {
+        Session session = sessionFactory.openSession();
+        long  stockHP = (long) session.createQuery("select sum(stock) from Produit where marque='HP'").uniqueResult();
+
+        return stockHP;
+    }
+
+    @Override
+    public double moyenneProduit() {
+        Session session = sessionFactory.openSession();
+        double moyenneProduit = (double) session.createQuery("select avg(prix) from Produit").uniqueResult();
+        return moyenneProduit;
+    }
+
+    @Override
+    public List<Produit> filterMarqueTelephone() throws Exception {
+        Session session = sessionFactory.openSession();
+        List noms = new ArrayList<String>();
+        noms.add("Samsung");
+        noms.add("Sony");
+        noms.add("Apple");
+        noms.add("Huawai");
+
+        Query<Produit> query =session.createQuery("from Produit where marque in :noms");
+        query.setParameter("noms", noms);
+
+        return query.list();
+
+    }
+
+    @Override
+    public int deleteMarque() {
+        Session session = sessionFactory.openSession();
+        String delete_query =  "delete from Produit where marque=:marqueD";
+        Query query = session.createQuery(delete_query);
+        query.setParameter("marqueD","Dell");
+        session.getTransaction().begin();
+        int success = query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+
+        return success;
+    }
+
+
 }
