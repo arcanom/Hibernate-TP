@@ -129,13 +129,8 @@ public class ProduitService implements IDAO<Produit> {
     }
 
     @Override
-    public List<Produit> filterMarqueTelephone() throws Exception {
+    public List<Produit> filterMarqueTelephone(List noms) throws Exception {
         Session session = sessionFactory.openSession();
-        List noms = new ArrayList<String>();
-        noms.add("Samsung");
-        noms.add("Sony");
-        noms.add("Apple");
-        noms.add("Huawai");
 
         Query<Produit> query =session.createQuery("from Produit where marque in :noms");
         query.setParameter("noms", noms);

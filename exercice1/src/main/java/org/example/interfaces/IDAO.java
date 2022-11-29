@@ -22,7 +22,7 @@ public interface IDAO<T> {
 
     double moyenneProduit();
 
-    List<T> filterMarqueTelephone() throws Exception;
+    List<T> filterMarqueTelephone(List noms) throws Exception;
 
     int deleteMarque(String marque);
 }

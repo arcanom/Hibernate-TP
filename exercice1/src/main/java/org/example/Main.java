@@ -122,7 +122,13 @@ public class Main {
                     System.out.println("Moyenne " + moyenne);
                     break;
                 case 3:
-                    List<Produit> produits = ps.filterMarqueTelephone();
+                    List noms = new ArrayList<String>();
+                    noms.add("Samsung");
+                    noms.add("Sony");
+                    noms.add("Apple");
+                    noms.add("Huawai");
+
+                    List<Produit> produits = ps.filterMarqueTelephone(noms);
                      for (Produit p: produits){
                          System.out.println(p);
                          }
