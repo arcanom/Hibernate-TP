@@ -1,5 +1,8 @@
 package org.example;
 
+import jdk.swing.interop.SwingInterOpUtils;
+import org.example.entities.Commentaire;
+import org.example.entities.Image;
 import org.example.entities.Produit;
 import org.example.services.ProduitService;
 import org.hibernate.Session;
@@ -9,6 +12,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 
+import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,6 +110,9 @@ public class Main {
         System.out.println("2- Prix Moyen des produits");
         System.out.println("3-  Liste des marques de téléphone");
         System.out.println("4- Supprimer les produits d'une marque ");
+        System.out.println("5- Ajouter un commentaire à un produit");
+        System.out.println("6- Ajouter une image à un produit");
+        System.out.println("7- Afficher les produits avec une note de 4 ");
         System.out.println("0- Exit");
         Scanner sc = new Scanner(System.in);
         int choix = sc.nextInt();
@@ -114,7 +121,7 @@ public class Main {
                 case 1:
                     System.out.println("Le nom de la marque");
                     String marque = sc.next();
-                    Long stock = ps.stockHP(marque);
+                    double stock = ps.stockHP(marque);
                     System.out.println("Somme stock HP " +  stock);
                     break;
                 case 2:
@@ -123,6 +130,7 @@ public class Main {
                     break;
                 case 3:
                     List noms = new ArrayList<String>();
+                    
                     noms.add("Samsung");
                     noms.add("Sony");
                     noms.add("Apple");
@@ -139,6 +147,41 @@ public class Main {
                     int result1 =  ps.deleteMarque(marque1);
                     System.out.println(result1);
                     break;
+                case 5:
+                    System.out.println("Id du produit");
+                    int idCommentaire = sc.nextInt();
+                    System.out.println("Contenu du commentaire");
+                    sc.nextLine();
+                    String contenu = sc.nextLine();
+                    System.out.println("date du commentaire (Format:dd/mm/yyyy)");
+                    String date = sc.next();
+                    Date convertDate = new SimpleDateFormat("dd/mm/yyyy").parse(date);
+                    System.out.println("Note du commentaire");
+                    int note = sc.nextInt();
+                    Commentaire c = new Commentaire();
+
+                    c.setContenu(contenu);
+                    c.setDate(convertDate);
+                    c.setNote(note);
+                    ps.addCommentaire(c,idCommentaire);
+                    break;
+                case 6:
+                    System.out.println("Id du produit");
+                    int idImage = sc.nextInt();
+                    System.out.println("URL de l'image");
+                    String url = sc.next();
+                    Image i = new Image();
+                    i.setUrl(url);
+                    ps.addImage(i,idImage);
+                    break;
+                case 7:
+                        List<Produit> produits1 =  ps.filterProduitNoteQuatre();
+                        for (Produit p: produits1){
+
+                            System.out.println(p);
+                        }
+                        break;
+
                 case 0:
                     System.out.println("Au revoir");
                     break;
@@ -149,6 +192,9 @@ public class Main {
             System.out.println("2- Prix Moyen des produits");
             System.out.println("3-  Liste des marques de téléphone");
             System.out.println("4- Supprimer les produits d'une marque ");
+            System.out.println("5- Ajouter un commentaire à un produit");
+            System.out.println("6- Ajouter une image à un produit");
+            System.out.println("7- Afficher les produits avec une note de 4 ");
             System.out.println("0- Exit");
             choix = sc.nextInt();
         }

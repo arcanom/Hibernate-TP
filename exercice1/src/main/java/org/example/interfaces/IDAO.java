@@ -1,5 +1,9 @@
 package org.example.interfaces;
 
+import org.example.entities.Commentaire;
+import org.example.entities.Image;
+import org.example.entities.Produit;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,11 +22,17 @@ public interface IDAO<T> {
 
     List<T>filterByDate() throws Exception;
 
-    long stockHP(String marque) ;
+    double stockHP(String marque) ;
 
     double moyenneProduit();
 
     List<T> filterMarqueTelephone(List noms) throws Exception;
 
     int deleteMarque(String marque);
+
+    void addImage(Image i, int id);
+
+    void addCommentaire(Commentaire c, int id);
+
+    List<T>  filterProduitNoteQuatre();
 }

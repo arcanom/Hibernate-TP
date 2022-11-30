@@ -1,5 +1,7 @@
 package org.example.services;
 
+import org.example.entities.Commentaire;
+import org.example.entities.Image;
 import org.example.entities.Produit;
 import org.example.interfaces.IDAO;
 import org.hibernate.Session;
@@ -112,29 +114,32 @@ public class ProduitService implements IDAO<Produit> {
     }
 
     @Override
-    public long stockHP(String marque) {
+    public double stockHP(String marque) {
         Session session = sessionFactory.openSession();
-        Query query =  session.createQuery("select sum(stock) from Produit where marque=:marque");
+        session.beginTransaction();
+        Query<Double> query =  session.createQuery("select sum(stock) from Produit where marque=:marque");
         query.setParameter("marque",marque);
-        long  stockHP = (long) query.uniqueResult();
+        return  query.uniqueResult();
 
-        return stockHP;
     }
 
     @Override
     public double moyenneProduit() {
         Session session = sessionFactory.openSession();
+        session.beginTransaction();
         double moyenneProduit = (double) session.createQuery("select avg(prix) from Produit").uniqueResult();
         return moyenneProduit;
     }
 
     @Override
     public List<Produit> filterMarqueTelephone(List noms) throws Exception {
-        Session session = sessionFactory.openSession();
 
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
         Query<Produit> query =session.createQuery("from Produit where marque in :noms");
         query.setParameter("noms", noms);
-
+        session.getTransaction().commit();
         return query.list();
 
     }
@@ -142,6 +147,7 @@ public class ProduitService implements IDAO<Produit> {
     @Override
     public int deleteMarque(String marque) {
         Session session = sessionFactory.openSession();
+        session.beginTransaction();
         String delete_query =  "delete from Produit where marque=:marqueD";
         Query query = session.createQuery(delete_query);
         query.setParameter("marqueD",marque);
@@ -151,6 +157,40 @@ public class ProduitService implements IDAO<Produit> {
         session.close();
 
         return success;
+    }
+
+    @Override
+    public void addImage(Image i,int id ) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Produit produit = session.get(Produit.class,id);
+        i.setProduitImage(produit);
+        session.save(i);
+        produit.ajouterImage(i);
+        session.update(produit);
+        session.getTransaction().commit();
+
+    }
+
+    @Override
+    public void addCommentaire(Commentaire c, int id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Produit produit = session.get(Produit.class,id);
+        c.setProduitCommentaire(produit);
+        produit.ajouterCommentaire(c);
+        session.update(produit);
+        session.getTransaction().commit();
+    }
+
+    @Override
+    public List<Produit> filterProduitNoteQuatre() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Produit> query =session.createQuery("from Produit, Commentaire where Produit.id = Commentaire.produit_id and Commentaire.note >=  4 ");
+        session.getTransaction().commit();
+        return query.list();
+
     }
 
 

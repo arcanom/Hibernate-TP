@@ -2,7 +2,9 @@ package org.example.entities;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Produit {
@@ -93,4 +95,35 @@ public class Produit {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    @OneToMany(mappedBy = "produitCommentaire" )
+    private List<Commentaire>  produitCommentaire = new ArrayList<>();
+
+    public void ajouterCommentaire(Commentaire c){
+        produitCommentaire.add(c);
+    }
+
+    public List<Commentaire> getProduitCommentaire() {
+        return produitCommentaire;
+    }
+
+    public void setProduitCommentaire(List<Commentaire> produitCommentaire) {
+        this.produitCommentaire = produitCommentaire;
+    }
+
+    public List<Image> getProduitImage() {
+        return produitImage;
+    }
+
+    public void setProduitImage(List<Image> produitImage) {
+        this.produitImage = produitImage;
+    }
+
+    @OneToMany(mappedBy = "produitImage")
+    private List<Image> produitImage= new ArrayList<>();
+
+    public void ajouterImage(Image i){
+        produitImage.add(i);
+    }
+
 }
