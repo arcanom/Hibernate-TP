@@ -1,6 +1,7 @@
 package org.example;
 
 import jdk.swing.interop.SwingInterOpUtils;
+import org.example.entities.Commande;
 import org.example.entities.Commentaire;
 import org.example.entities.Image;
 import org.example.entities.Produit;
@@ -16,6 +17,8 @@ import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
@@ -113,16 +116,20 @@ public class Main {
         System.out.println("5- Ajouter un commentaire à un produit");
         System.out.println("6- Ajouter une image à un produit");
         System.out.println("7- Afficher les produits avec une note de 4 ");
+        System.out.println("8- Faire une commande");
+        System.out.println("9- Totalité des commandes");
+        System.out.println("11- Commandes du jour");
         System.out.println("0- Exit");
         Scanner sc = new Scanner(System.in);
         int choix = sc.nextInt();
-        while(choix != 0){
-            switch (choix){
+        while(choix != 0) {
+
+            switch (choix) {
                 case 1:
                     System.out.println("Le nom de la marque");
                     String marque = sc.next();
                     double stock = ps.stockHP(marque);
-                    System.out.println("Somme stock HP " +  stock);
+                    System.out.println("Somme stock HP " + stock);
                     break;
                 case 2:
                     double moyenne = ps.moyenneProduit();
@@ -130,21 +137,21 @@ public class Main {
                     break;
                 case 3:
                     List noms = new ArrayList<String>();
-                    
+
                     noms.add("Samsung");
                     noms.add("Sony");
                     noms.add("Apple");
                     noms.add("Huawai");
 
                     List<Produit> produits = ps.filterMarqueTelephone(noms);
-                     for (Produit p: produits){
-                         System.out.println(p);
-                         }
-                     break;
+                    for (Produit p : produits) {
+                        System.out.println(p);
+                    }
+                    break;
                 case 4:
                     System.out.println("Le nom de la marque");
                     String marque1 = sc.next();
-                    int result1 =  ps.deleteMarque(marque1);
+                    int result1 = ps.deleteMarque(marque1);
                     System.out.println(result1);
                     break;
                 case 5:
@@ -163,7 +170,7 @@ public class Main {
                     c.setContenu(contenu);
                     c.setDate(convertDate);
                     c.setNote(note);
-                    ps.addCommentaire(c,idCommentaire);
+                    ps.addCommentaire(c, idCommentaire);
                     break;
                 case 6:
                     System.out.println("Id du produit");
@@ -172,22 +179,61 @@ public class Main {
                     String url = sc.next();
                     Image i = new Image();
                     i.setUrl(url);
-                    ps.addImage(i,idImage);
+                    ps.addImage(i, idImage);
                     break;
                 case 7:
-                        List<Produit> produits1 =  ps.filterProduitNoteQuatre();
-                        for (Produit p: produits1){
+                    List<Produit> produits1 = ps.filterProduitNoteQuatre();
+                    for (Produit p : produits1) {
 
-                            System.out.println(p);
-                        }
-                        break;
-
-                case 0:
-                    System.out.println("Au revoir");
+                        System.out.println(p);
+                    }
                     break;
-                default:
-                    System.out.println("Choix incorrect");
-            }
+                case 8:
+                    String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+
+                    System.out.println("Le total");
+                    int total = sc.nextInt();
+                    Commande commande = new Commande(total,dateNow);
+                    System.out.println("Combien de produits voulez vous commander?");
+                    int nbreProduits = sc.nextInt();
+                    int compteur = nbreProduits;
+                    int propo = 1;
+                    while (compteur != 0) {
+                        System.out.println("Article n° " + propo);
+                        int id = sc.nextInt();
+                        Produit p = ps.findById(id);
+                        commande.ajouterProduit(p);
+
+                        compteur--;
+                        propo++;
+                    }
+
+
+
+                    if (ps.createCommande(commande)) {
+                         System.out.println("Commande effectuée");
+                } else {
+                    System.out.println("Erreur lors de la commande");
+                }
+                break;
+            case 9:
+                List<Commande> commandeTotal = ps.allCommandes();
+                for (Commande commande1 : commandeTotal) {
+                    System.out.println(commande1);
+                }
+            case 11:
+                List<Commande> commandes = ps.commandeInThisDay();
+                for (Commande commande1 : commandes) {
+                    System.out.println(commande1);
+                }
+
+            case 0:
+                System.out.println("Au revoir");
+                break;
+            default:
+                System.out.println("Choix incorrect");
+        }
             System.out.println("1- Stock des produits d'une marque");
             System.out.println("2- Prix Moyen des produits");
             System.out.println("3-  Liste des marques de téléphone");
@@ -195,6 +241,9 @@ public class Main {
             System.out.println("5- Ajouter un commentaire à un produit");
             System.out.println("6- Ajouter une image à un produit");
             System.out.println("7- Afficher les produits avec une note de 4 ");
+            System.out.println("8- Faire une commande");
+            System.out.println("9- Totalité des commandes");
+            System.out.println("11- Commandes du jour");
             System.out.println("0- Exit");
             choix = sc.nextInt();
         }

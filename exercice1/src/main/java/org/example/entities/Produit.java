@@ -2,24 +2,10 @@ package org.example.entities;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Produit {
-
-    @Override
-    public String toString() {
-        return "Produit{" +
-                "id=" + id +
-                ", marque='" + marque + '\'' +
-                ", reference='" + reference + '\'' +
-                ", dateAchat=" + dateAchat +
-                ", prix=" + prix +
-                ", stock=" + stock +
-                '}';
-    }
 
     @Id
     @GeneratedValue
@@ -126,4 +112,27 @@ public class Produit {
         produitImage.add(i);
     }
 
+    @ManyToMany(mappedBy = "produits")
+    Set<Commande> commandes = new HashSet<>();
+
+
+    public Set<Commande> getCommandes() {
+        return commandes;
+    }
+
+    public void setCommandes(Set<Commande> commandes) {
+        this.commandes = commandes;
+    }
+
+    @Override
+    public String toString() {
+        return "Produit{" +
+                "produit_id=" + id +
+                ", marque='" + marque + '\'' +
+                ", reference='" + reference + '\'' +
+                ", dateAchat=" + dateAchat +
+                ", prix=" + prix +
+                ", stock=" + stock +
+                '}';
+    }
 }

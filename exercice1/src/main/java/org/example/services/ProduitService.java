@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.entities.Commande;
 import org.example.entities.Commentaire;
 import org.example.entities.Image;
 import org.example.entities.Produit;
@@ -11,7 +12,10 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.Query;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -187,11 +191,43 @@ public class ProduitService implements IDAO<Produit> {
     public List<Produit> filterProduitNoteQuatre() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        Query<Produit> query =session.createQuery("from Produit, Commentaire where Produit.id = Commentaire.produit_id and Commentaire.note >=  4 ");
+        Query<Produit> query =session.createQuery("from Produit, Commentaire where Produit.id = :id and Produit.id = Commentaire.produit_id and Commentaire.note >=  4 ");
         session.getTransaction().commit();
         return query.list();
 
     }
+
+
+    public boolean createCommande(Commande c){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.save(c);
+        session.getTransaction().commit();
+        return true;
+    }
+
+
+    public List<Commande> allCommandes(){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query<Commande> query = session.createQuery("from Commande");
+        session.getTransaction().commit();
+        return query.list();
+
+    }
+
+    public List<Commande> commandeInThisDay()  {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        Query<Commande> commandeQuery =  session.createQuery("from Commande where dateCommande = :date");
+        commandeQuery.setParameter("date", dateNow);
+        session.getTransaction().commit();
+        return commandeQuery.list();
+
+    }
+
+
 
 
 }
